@@ -13,7 +13,7 @@ class Logger:
             print logStr
 
 def showHelp():
-    print 'test.py -b <basefile> -l <localizedfile>'
+    print 'python android_localization_gaps.py -b <basefile> -l <localizedfile>'
     print 'options'
     print '-d: enable debug mode'
     print '-h: show help'
