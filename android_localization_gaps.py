@@ -2,6 +2,12 @@ from xml.dom import minidom
 import sys, getopt
 import codecs
 
+# Todo
+# 1. Give Android Studio source route and then automatically find gaps for all
+#       localization w.r.t base strings xml. Handle cases like filename other than
+#       strings.xml
+# 2. Add support for string arrays
+
 class Logger:
     logEnabled = False;
 
