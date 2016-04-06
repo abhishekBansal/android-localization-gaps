@@ -1,6 +1,7 @@
 from xml.dom import minidom
 import sys, getopt
 import codecs
+from ASProjectTree import ASProject
 
 # Todo
 # 1. Give Android Studio source route and then automatically find gaps for all
@@ -21,8 +22,10 @@ class Logger:
 def showHelp():
     print 'python android_localization_gaps.py -b <basefile> -l <localizedfile>'
     print 'options'
+    print '--root: Android Studio project root '
     print '-d: enable debug mode'
     print '-h: show help'
+    print '-s: sort all string resource files by its name'
 
 def getItemListFromStringsXml(fileName):
     baseXmlDoc = minidom.parse(fileName)
@@ -31,7 +34,7 @@ def getItemListFromStringsXml(fileName):
 
 if __name__ == "__main__":
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hdb:l:",["base=","localized="])
+        opts, args = getopt.getopt(sys.argv[1:],"hdsb:l:",["base=","localized=", "root="])
     except getopt.GetoptError:
         showHelp()
         sys.exit()
@@ -52,6 +55,10 @@ if __name__ == "__main__":
         elif opt in ("-l", "--localized"):
             log.d("localizedFile: " + arg)
             localizedFile = arg
+        elif opt == '--root':
+            project = ASProject(arg)
+            project.getStringFiles()
+            sys.exit()
 
     # base strings file
     log.d("Reading base strings.. ")
