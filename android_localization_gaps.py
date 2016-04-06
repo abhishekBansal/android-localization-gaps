@@ -1,7 +1,9 @@
 from xml.dom import minidom
 import sys, getopt
 import codecs
+
 from ASProjectTree import ASProject
+from Log import Logger
 
 # Todo
 # 1. Give Android Studio source route and then automatically find gaps for all
@@ -9,19 +11,10 @@ from ASProjectTree import ASProject
 #       strings.xml
 # 2. Add support for string arrays
 
-class Logger:
-    logEnabled = False;
-
-    def __init__(self):
-        logEnabled = False
-
-    def d(self, logStr):
-        if self.logEnabled:
-            print logStr
-
 def showHelp():
+    print "\nUsage: "
     print 'python android_localization_gaps.py -b <basefile> -l <localizedfile>'
-    print 'options'
+    print 'options:'
     print '--root: Android Studio project root '
     print '-d: enable debug mode'
     print '-h: show help'
@@ -30,12 +23,23 @@ def showHelp():
 def getItemListFromStringsXml(fileName):
     baseXmlDoc = minidom.parse(fileName)
     baseItemList = baseXmlDoc.getElementsByTagName('string')
+    baseItemList.append(baseXmlDoc.getElementsByTagName('string-array'))
     return baseItemList
+
+def sort(stringFilePath):
+    nodes = getItemListFromStringsXml(stringFilePath);
+    nodes.sort(key=lambda x: str(x.attributes['name'].value))
+    return nodes
 
 if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:],"hdsb:l:",["base=","localized=", "root="])
     except getopt.GetoptError:
+        showHelp()
+        sys.exit()
+
+    if '--root' not in opts:
+        print "\'--root\' is compulsory argument."
         showHelp()
         sys.exit()
 
